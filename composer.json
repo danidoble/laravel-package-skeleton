@@ -3,7 +3,7 @@
   "description": "A simple Laravel package skeleton development environment",
   "type": "library",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "v0.1.0",
   "keywords": [
     "laravel",
     "package",
