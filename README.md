@@ -2,6 +2,11 @@
 
 Create your own laravel package with this skeleton.
 
+# requirements
+
+* PHP 8.1 or higher
+* Laravel 10 or higher
+
 ## Installation
 
 ```bash
