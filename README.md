@@ -4,13 +4,18 @@ Create your own laravel package with this skeleton.
 
 # requirements
 
-* PHP 8.1 or higher
-* Laravel 10 or higher
+For Laravel 10
+
+* PHP 8.1
+
+For Laravel 11 and above
+
+* PHP 8.2 or higher
 
 ## Installation
 
 ```bash
-composer create-project --prefer-dist --stability=dev
+composer create-project danidoble/laravel-package-skeleton --prefer-dist --stability=dev
 ```
 
 ## Configuration

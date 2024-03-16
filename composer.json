@@ -3,7 +3,7 @@
   "description": "A simple Laravel package skeleton development environment",
   "type": "library",
   "license": "MIT",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "keywords": [
     "laravel",
     "package",
@@ -23,7 +23,7 @@
   },
   "require-dev": {
     "laravel/pint": "^1.14",
-    "orchestra/testbench": "^8.21",
+    "orchestra/testbench": "^8.21|^v9.0.0",
     "pestphp/pest": "^2.34"
   },
   "autoload": {
