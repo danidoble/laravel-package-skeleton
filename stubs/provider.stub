@@ -6,7 +6,7 @@ namespace Danidoble\LaravelPackageSkeleton\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-final class LaravelPackageSkeletonProvider extends ServiceProvider
+final class LaravelPackageSkeletonServiceProvider extends ServiceProvider
 {
     public function register(): void
     {

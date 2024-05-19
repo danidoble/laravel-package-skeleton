@@ -1,0 +1,76 @@
+{
+    "name": "danidoble/washere",
+    "description": "A simple Laravel package skeleton development environment",
+    "type": "library",
+    "license": "MIT",
+    "version": "1.0.0",
+    "keywords": [
+        "laravel",
+        "package",
+        "skeleton",
+        "danidoble"
+    ],
+    "authors": [],
+    "require": {
+        "php": "^8.1"
+    },
+    "require-dev": {
+        "laravel/prompts": "^0.1.21",
+        "laravel/pint": "^1.14",
+        "orchestra/testbench": "^8.21|^v9.0.0",
+        "pestphp/pest": "^2.34"
+    },
+    "autoload": {
+        "psr-4": {
+            "Danidoble\\WasHere\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/",
+            "Danidoble\\WasHere\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Danidoble\\WasHere\\Providers\\WashereServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve"
+        ],
+        "lint": [
+            "@php vendor/bin/phpstan analyse"
+        ],
+        "configure": [
+            "@php configure.php"
+        ],
+        "post-install-cmd": [
+            "php configure.php"
+        ]
+    }
+}
