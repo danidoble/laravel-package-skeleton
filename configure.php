@@ -27,6 +27,7 @@ function configure(): void
 
     makeServiceProvider($package, $namespace, $has_config, $has_migration, $has_web_routes);
     setComposerName($company, $package, $namespace);
+    removeStubDir();
 }
 
 function setComposerName(string $company, string $package, string $namespace): void
@@ -148,6 +149,17 @@ function makeServiceProvider(
     );
 
     file_put_contents('src/Providers/'.Str::studly($package).'ServiceProvider.php', $provider);
+}
+
+function removeStubDir(): void
+{
+    $files = glob('stubs/*');
+    foreach ($files as $file) {
+        if (is_file($file)) {
+            unlink($file);
+        }
+    }
+    rmdir('stubs');
 }
 
 function getCompany(): string
