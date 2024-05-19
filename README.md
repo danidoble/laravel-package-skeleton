@@ -15,20 +15,8 @@ For Laravel 11 and above
 ## Installation
 
 ```bash
-composer create-project danidoble/laravel-package-skeleton --prefer-dist --stability=dev
+composer create-project danidoble/laravel-package-skeleton --prefer-dist
 ```
-
-## Configuration
-
-Configure composer.json with your package information.
-
-* Change `danidoble/laravel-package-skeleton` with your package name.
-* Change `Danidoble\LaravelPackageSkeleton` with your package namespace.
-* Change `Danidoble\LaravelPackageSkeleton\LaravelPackageSkeletonServiceProvider` with your package service provider.
-* Change `config/package.php` with your package configuration file.
-* Change `database/migrations/*.php` with your package migrations.
-* Change `resources/views/*.blade.php` with your package views.
-* Change `routes/web.php` with your package routes.
 
 ## Usage
 
