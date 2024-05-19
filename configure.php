@@ -20,6 +20,7 @@ function configure(): void
     }
     if ($has_migration) {
         makeTableMigration($package);
+        makeModel($package, $namespace);
     }
     if ($has_web_routes) {
         makeWebRoutes($package);
@@ -27,6 +28,8 @@ function configure(): void
 
     makeServiceProvider($package, $namespace, $has_config, $has_migration, $has_web_routes);
     setComposerName($company, $package, $namespace);
+    initGit();
+
     removeStubDir();
 }
 
@@ -89,6 +92,14 @@ function makeTableMigration(string $package): void
     $table = file_get_contents('stubs/migration.stub');
     $table = str_replace('[package]', getTableName($package), $table);
     file_put_contents('database/migrations/'.getTableMigrationName($package).'.php', $table);
+}
+
+function makeModel(string $package, string $namespace): void
+{
+    $model = file_get_contents('stubs/model.stub');
+    $model = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $model);
+    $model = Str::replace('LaravelPackageSkeleton', Str::studly($package), $model);
+    file_put_contents('src/Models/'.Str::studly($package).'.php', $model);
 }
 
 function makeWebRoutes(string $package): void
@@ -213,6 +224,25 @@ function wantWebRoutes(): bool
         no: 'No',
         hint: 'This make a file inside routes dir.'
     );
+}
+
+function initGit(): void
+{
+    $initialize = confirm(
+        label: 'Do you want to initialize a git repository?',
+        default: false,
+        yes: 'Yes',
+        no: 'No',
+        hint: 'This will run git init.',
+    );
+
+    if (! file_exists('.gitignore')) {
+        copy('stubs/gitignore.stub', '.gitignore');
+    }
+
+    if ($initialize) {
+        exec('git init');
+    }
 }
 
 configure();
