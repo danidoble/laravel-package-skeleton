@@ -78,7 +78,8 @@
     "configure": [
       "@php -f configure.php || echo 'configure.php not found. Skipping...'",
       "@php vendor/bin/pint",
-      "@php -r \"if (file_exists('configure.php')) { unlink('configure.php'); }\""
+      "@php -r \"if (file_exists('configure.php')) { unlink('configure.php'); }\"",
+      "composer update"
     ]
   }
 }
