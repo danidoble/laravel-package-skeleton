@@ -197,7 +197,7 @@ function wantConfig(): bool
 {
     return confirm(
         label: 'Do you want have a config file?',
-        default: false,
+        default: true,
         yes: 'Yes',
         no: 'No',
         hint: 'This make a file inside config dir.'
@@ -208,7 +208,7 @@ function wantMigration(): bool
 {
     return confirm(
         label: 'Do you want have a migration file?',
-        default: false,
+        default: true,
         yes: 'Yes',
         no: 'No',
         hint: 'This make a file inside database/migrations dir.'
@@ -219,7 +219,7 @@ function wantWebRoutes(): bool
 {
     return confirm(
         label: 'Do you want web routes?',
-        default: false,
+        default: true,
         yes: 'Yes',
         no: 'No',
         hint: 'This make a file inside routes dir.'
@@ -230,7 +230,7 @@ function initGit(): void
 {
     $initialize = confirm(
         label: 'Do you want to initialize a git repository?',
-        default: false,
+        default: true,
         yes: 'Yes',
         no: 'No',
         hint: 'This will run git init.',
