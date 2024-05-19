@@ -53,7 +53,7 @@ function setComposerName(string $company, string $package, string $namespace): v
     // when install the package, execute this file to configure the package
     $composer['scripts']['post-install-cmd'][] = 'php configure.php';
 
-    file_put_contents('composer-copy.json', json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    file_put_contents('composer.json', json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 }
 
 function getNamespace(string $company, string $package): string
