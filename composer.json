@@ -58,6 +58,9 @@
     }
   },
   "scripts": {
+    "post-install-cmd": [
+      "composer configure"
+    ],
     "post-autoload-dump": [
       "@clear",
       "@prepare"
@@ -74,7 +77,8 @@
       "@php vendor/bin/phpstan analyse"
     ],
     "configure": [
-      "@php configure.php"
+      "@php configure.php",
+      "@php vendor/bin/pint"
     ]
   }
 }
