@@ -3,7 +3,6 @@
   "description": "A simple Laravel package skeleton development environment",
   "type": "library",
   "license": "MIT",
-  "version": "v1.0.0",
   "keywords": [
     "laravel",
     "package",
@@ -58,7 +57,7 @@
     }
   },
   "scripts": {
-    "post-install-cmd": [
+    "post-create-project-cmd": [
       "composer configure"
     ],
     "post-autoload-dump": [
@@ -77,8 +76,9 @@
       "@php vendor/bin/phpstan analyse"
     ],
     "configure": [
-      "@php configure.php",
-      "@php vendor/bin/pint"
+      "@php -f configure.php || echo 'configure.php not found. Skipping...'",
+      "@php vendor/bin/pint",
+      "@php -r \"if (file_exists('configure.php')) { unlink('configure.php'); }\""
     ]
   }
 }

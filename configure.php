@@ -39,7 +39,6 @@ function setComposerName(string $company, string $package, string $namespace): v
     $packageProvider = Str::studly($package).'ServiceProvider';
 
     $composer['name'] = $company.'/'.Str::snake($package);
-    $composer['version'] = '1.0.0';
     $composer['authors'] = [];
     $composer['autoload']['psr-4'] = [
         $namespace.'\\' => 'src/',
