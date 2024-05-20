@@ -78,9 +78,9 @@
     "configure": [
       "@php -r \"if(PHP_OS_FAMILY !== 'Windows' && file_exists('configure.php')){include 'configure.php';}\"",
       "@php vendor/bin/pint",
-      "@php -r \"if (PHP_OS_FAMILY !== 'Windows' && file_exists('configure.php')) { unlink('configure.php'); }\"",
+      "@php -r \"if (PHP_OS_FAMILY !== 'Windows' && file_exists('configure.php')) {unlink('configure.php');}\"",
       "composer update",
-      "@php -r \"if(PHP_OS_FAMILY === 'Windows'){echo 'Please run `php configure.php` to complete process'}\""
+      "@php -r \"if(PHP_OS_FAMILY === 'Windows'){echo 'Please run php configure.php to complete process';}\""
     ]
   }
 }
