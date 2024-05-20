@@ -18,6 +18,35 @@ For Laravel 11 and above
 composer create-project danidoble/laravel-package-skeleton --prefer-dist
 ```
 
+### Note for Windows
+
+Windows not support laravel prompts, so you need to create project, and when it finishes, you need to run the following
+commands:
+
+Enter to the project folder
+
+```bash
+cd laravel-package-skeleton
+```
+
+Execute the configuration script
+
+```bash
+php configure.php
+```
+
+update composer
+
+```bash
+composer update
+```
+
+or in one line
+
+```bash
+cd laravel-package-skeleton && php configure.php && composer update
+```
+
 ## Usage
 
 If you want test the basic route run:
@@ -46,6 +75,5 @@ to check the complete list of commands run:
 ./vendor/bin/testbench list
 ```
 
-
-for more information about testing with orchestra/testbench visit 
+for more information about testing with orchestra/testbench visit
 [Orchestra Testbench](https://packages.tools/testbench)

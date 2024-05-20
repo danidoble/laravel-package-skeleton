@@ -76,10 +76,11 @@
       "@php vendor/bin/phpstan analyse"
     ],
     "configure": [
-      "@php -f configure.php || echo 'configure.php not found. Skipping...'",
+      "@php -r \"if(PHP_OS_FAMILY !== 'Windows' && file_exists('configure.php')){include 'configure.php';}\"",
       "@php vendor/bin/pint",
-      "@php -r \"if (file_exists('configure.php')) { unlink('configure.php'); }\"",
-      "composer update"
+      "@php -r \"if (PHP_OS_FAMILY !== 'Windows' && file_exists('configure.php')) { unlink('configure.php'); }\"",
+      "composer update",
+      "@php -r \"if(PHP_OS_FAMILY === 'Windows'){echo 'Please run `php configure.php` to complete process'}\""
     ]
   }
 }
