@@ -1,11 +1,65 @@
 <?php
 
 use Illuminate\Support\Str;
-
+use Laravel\Prompts\Prompt;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\text;
 
+use Laravel\Prompts\TextPrompt;
+use Laravel\Prompts\ConfirmPrompt;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
+
 require __DIR__.'/vendor/autoload.php';
+
+Prompt::fallbackWhen(windows_os());
+
+$input = new Symfony\Component\Console\Input\ArgvInput();
+$output = new Symfony\Component\Console\Output\ConsoleOutput();
+
+TextPrompt::fallbackUsing(function (TextPrompt $prompt) use ($input, $output) {
+    $question = (new Question($prompt->label, $prompt->default ?: null))
+        ->setValidator(function ($answer) use ($prompt) {
+            if ($prompt->required && $answer === null) {
+                throw new \RuntimeException(is_string($prompt->required) ? $prompt->required : 'Required.');
+            }
+
+            if ($prompt->validate) {
+                $error = ($prompt->validate)($answer ?? '');
+
+                if ($error) {
+                    throw new \RuntimeException($error);
+                }
+            }
+
+            return $answer;
+        });
+
+    return (new SymfonyStyle($input, $output))
+        ->askQuestion($question);
+});
+
+ConfirmPrompt::fallbackUsing(function (ConfirmPrompt $prompt) use ($input, $output) {
+    $question = (new \Symfony\Component\Console\Question\ConfirmationQuestion($prompt->label, $prompt->default))
+        ->setValidator(function ($answer) use ($prompt) {
+            if ($prompt->required && $answer === null) {
+                throw new \RuntimeException(is_string($prompt->required) ? $prompt->required : 'Required.');
+            }
+
+            if ($prompt->validate) {
+                $error = ($prompt->validate)($answer);
+
+                if ($error) {
+                    throw new \RuntimeException($error);
+                }
+            }
+
+            return $answer;
+        });
+
+    return (new SymfonyStyle($input, $output))
+        ->askQuestion($question);
+});
 
 function configure(): void
 {
@@ -196,7 +250,7 @@ function getPackageName(): string
 function wantConfig(): bool
 {
     return confirm(
-        label: 'Do you want have a config file?',
+        label: 'Do you want a config file?',
         default: true,
         yes: 'Yes',
         no: 'No',
@@ -207,7 +261,7 @@ function wantConfig(): bool
 function wantMigration(): bool
 {
     return confirm(
-        label: 'Do you want have a migration file?',
+        label: 'Do you want a migration file?',
         default: true,
         yes: 'Yes',
         no: 'No',
@@ -229,7 +283,7 @@ function wantWebRoutes(): bool
 function initGit(): void
 {
     $initialize = confirm(
-        label: 'Do you want to initialize a git repository?',
+        label: 'Do you want initialize a git repository?',
         default: true,
         yes: 'Yes',
         no: 'No',
