@@ -29,6 +29,17 @@ Enter to the project folder
 cd laravel-package-skeleton
 ```
 
+### Experimental Expose assets (js, css)
+
+If you want to expose route assets (js, css) in your package, you need to select yes in web routes, and the next question
+`Do you want to expose assets with url? (This will expose 2 routes (by default), E.g. /assets/css and /assets/js.)` 
+
+If you want to expose assets with url, select yes again.
+
+##### Notes
+* This feature is experimental, and may not work as expected.
+* This feature only support tailwindcss, but you can add your own css framework.
+
 Execute the configuration script
 
 ```bash
