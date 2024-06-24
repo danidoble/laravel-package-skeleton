@@ -342,7 +342,9 @@ function removeSubDirStubDir(string $subDir): void
 {
     $files = glob('stubs/'.$subDir.'/*');
     foreach ($files as $file) {
-        if (is_file($file)) {
+        if (is_dir($file)) {
+            removeSubDirStubDir(basename($file));
+        } elseif (is_file($file)) {
             unlink($file);
         }
     }
