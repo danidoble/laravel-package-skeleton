@@ -12,7 +12,7 @@ class AssetsController extends ExposerController
     public function styles(): BinaryFileResponse
     {
         $route = route('package.assets.styles');
-        $version = (new BladeDirectives())->getManifestVersion('app', 'css', $route);
+        $version = (new BladeDirectives())->getManifestVersion(__DIR__, 'app', 'css', $route);
         $path = realpath(__DIR__ . "/../../../dist/build/assets/app$version.css");
         return Utils::pretendResponseIsFile($path, 'text/css');
     }
@@ -20,7 +20,7 @@ class AssetsController extends ExposerController
     public function scripts(): BinaryFileResponse
         {
             $route = route('package.assets.scripts');
-            $version = (new BladeDirectives())->getManifestVersion('app', 'js', $route);
+            $version = (new BladeDirectives())->getManifestVersion(__DIR__, 'app', 'js', $route);
             $path = realpath(__DIR__ . "/../../../dist/build/assets/app$version.js");
             return Utils::pretendResponseIsFile($path, 'application/javascript');
         }
