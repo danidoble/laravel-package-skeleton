@@ -1,0 +1,19 @@
+<?php
+
+namespace Danidoble\LaravelPackageSkeleton\Facades;
+
+use Illuminate\Support\Facades\Facade;
+use Danidoble\LaravelPackageSkeleton\Support\LaravelPackageSkeletonDirectives as BladeDirectives;
+
+/**
+ * @method static string styles(bool $absolute = true)
+ * @method static string scripts(bool $absolute = true, array $attributes = [])
+ * @method static string|null getManifestVersion(string $file, ?string &$route = null)
+ */
+class LaravelPackageSkeletonDirectives extends Facade
+{
+    protected static function getFacadeAccessor(): string
+    {
+        return BladeDirectives::class;
+    }
+}

@@ -1,0 +1,29 @@
+<?php
+
+namespace Danidoble\LaravelPackageSkeleton\Support;
+
+use Illuminate\View\ComponentAttributeBag;
+use Danidoble\Exposer\Support\BladeDirectives;
+
+class LaravelPackageSkeletonDirectives extends BladeDirectives
+{
+    public function styles(bool $absolute = true): string
+    {
+        $route = route('package.assets.styles', [], $absolute);
+        $this->getManifestVersion(__DIR__, 'app', 'css', $route);
+
+        return "<link href=\"{$route}\" rel=\"stylesheet\" type=\"text/css\">";
+    }
+
+    public function scripts(bool $absolute = true, array $attributes = []): string
+    {
+        $route = route('package.assets.scripts', [], $absolute);
+        $this->getManifestVersion(__DIR__, 'app', 'js', $route);
+
+        $attributes = new ComponentAttributeBag($attributes);
+
+        return <<<HTML
+        <script src="{$route}" defer {$attributes->toHtml()}></script>
+        HTML;
+    }
+}
