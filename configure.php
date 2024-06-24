@@ -10,7 +10,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\text;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 Prompt::fallbackWhen(windows_os());
 
@@ -103,17 +103,17 @@ function setComposerName(string $company, string $package, string $namespace): v
     $company = Str::lower($company);
     $package = Str::lower($package);
 
-    $packageProvider = Str::studly($package) . 'ServiceProvider';
+    $packageProvider = Str::studly($package).'ServiceProvider';
 
-    $composer['name'] = $company . '/' . Str::snake($package);
+    $composer['name'] = $company.'/'.Str::snake($package);
     $composer['authors'] = [];
     $composer['autoload']['psr-4'] = [
-        $namespace . '\\' => 'src/',
+        $namespace.'\\' => 'src/',
     ];
     unset($composer['autoload-dev']['psr-4']['Danidoble\\LaravelPackageSkeleton\\Tests\\']);
-    $composer['autoload-dev']['psr-4'][$namespace . '\\Tests\\'] = 'tests/';
+    $composer['autoload-dev']['psr-4'][$namespace.'\\Tests\\'] = 'tests/';
     $composer['extra']['laravel']['providers'] = [
-        $namespace . '\\Providers\\' . $packageProvider,
+        $namespace.'\\Providers\\'.$packageProvider,
     ];
 
     // when install the package, execute this file to configure the package
@@ -127,7 +127,7 @@ function getNamespace(string $company, string $package): string
     $company = Str::studly($company);
     $package = Str::studly($package);
 
-    return $company . '\\' . $package;
+    return $company.'\\'.$package;
 }
 
 function getConfigName(string $package): string
@@ -142,20 +142,20 @@ function getTableName(string $package): string
 
 function getTableMigrationName(string $package): string
 {
-    return now()->format('Y_m_d_His') . '_create_' . Str::snake($package) . '_table';
+    return now()->format('Y_m_d_His').'_create_'.Str::snake($package).'_table';
 }
 
 function makeConfigFile(string $package): void
 {
     $config = file_get_contents('stubs/config.stub');
-    file_put_contents('config/' . getConfigName($package) . '.php', $config);
+    file_put_contents('config/'.getConfigName($package).'.php', $config);
 }
 
 function makeTableMigration(string $package): void
 {
     $table = file_get_contents('stubs/migration.stub');
     $table = str_replace('[package]', getTableName($package), $table);
-    file_put_contents('database/migrations/' . getTableMigrationName($package) . '.php', $table);
+    file_put_contents('database/migrations/'.getTableMigrationName($package).'.php', $table);
 }
 
 function makeModel(string $package, string $namespace): void
@@ -163,7 +163,7 @@ function makeModel(string $package, string $namespace): void
     $model = file_get_contents('stubs/model.stub');
     $model = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $model);
     $model = Str::replace('LaravelPackageSkeleton', Str::studly($package), $model);
-    file_put_contents('src/Models/' . Str::studly($package) . '.php', $model);
+    file_put_contents('src/Models/'.Str::studly($package).'.php', $model);
 }
 
 function makeWebRoutes(string $package): void
@@ -185,25 +185,24 @@ function makeView(string $package): void
 
     $view = Str::replace('Package', $package, $view);
     $view = Str::replace('[package]', Str::snake($package), $view);
-    file_put_contents('resources/views/' . Str::snake($package) . '.blade.php', $view);
+    file_put_contents('resources/views/'.Str::snake($package).'.blade.php', $view);
 }
 
 function makeServiceProvider(
     string $package,
     string $namespace,
-    bool   $has_config,
-    bool   $has_migration,
-    bool   $has_web_routes,
-    bool   $with_assets = false
-): void
-{
+    bool $has_config,
+    bool $has_migration,
+    bool $has_web_routes,
+    bool $with_assets = false
+): void {
     $provider = file_get_contents('stubs/provider.stub');
     $provider = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $provider);
-    $provider = Str::replace('LaravelPackageSkeletonServiceProvider', Str::studly($package) . 'ServiceProvider', $provider);
+    $provider = Str::replace('LaravelPackageSkeletonServiceProvider', Str::studly($package).'ServiceProvider', $provider);
 
     $provider = Str::replace(
         '$this->mergeConfigFrom(__DIR__.\'/../../config/package.php\', \'package\');',
-        $has_config ? '$this->mergeConfigFrom(__DIR__.\'/../../config/' . getConfigName($package) . '.php\', \'' . Str::snake($package) . '\');' : '',
+        $has_config ? '$this->mergeConfigFrom(__DIR__.\'/../../config/'.getConfigName($package).'.php\', \''.Str::snake($package).'\');' : '',
         $provider
     );
 
@@ -215,7 +214,7 @@ function makeServiceProvider(
 
     $provider = Str::replace(
         '$this->loadViewsFrom(__DIR__.\'/../../resources/views\', \'package\');',
-        $has_web_routes ? '$this->loadViewsFrom(__DIR__.\'/../../resources/views\', \'' . Str::snake($package) . '\');' : '',
+        $has_web_routes ? '$this->loadViewsFrom(__DIR__.\'/../../resources/views\', \''.Str::snake($package).'\');' : '',
         $provider
     );
 
@@ -225,11 +224,11 @@ function makeServiceProvider(
         $provider
     );
 
-    if (!$with_assets) {
+    if (! $with_assets) {
         $provider = Str::replace('BladeDirectives::register();', '', $provider);
     }
 
-    file_put_contents('src/Providers/' . Str::studly($package) . 'ServiceProvider.php', $provider);
+    file_put_contents('src/Providers/'.Str::studly($package).'ServiceProvider.php', $provider);
 }
 
 function makeAssets(string $vendor, string $package, string $namespace): void
@@ -239,8 +238,8 @@ function makeAssets(string $vendor, string $package, string $namespace): void
     ];
 
     foreach ($directories as $directory) {
-        $path = __DIR__ . DIRECTORY_SEPARATOR . $directory;
-        if (!file_exists($path) && !is_dir($path)) {
+        $path = __DIR__.DIRECTORY_SEPARATOR.$directory;
+        if (! file_exists($path) && ! is_dir($path)) {
             mkdir($path, 0777, true);
         }
     }
@@ -275,8 +274,8 @@ function updateWebRoutesDirective(string $package, string $namespace): void
 
     $routes .= "\n\n";
     $routes .= "Route::middleware(['web'])->group(function () {\n";
-    $routes .= "    Route::get('/" . Str::snake($package) . "/assets/styles', [\\" . $namespace . "\\Http\\Controllers\\AssetsController::class,'styles'])->name('" . Str::snake($package) . ".assets.styles');\n";
-    $routes .= "    Route::get('/" . Str::snake($package) . "/assets/scripts', [\\" . $namespace . "\\Http\\Controllers\\AssetsController::class,'scripts'])->name('" . Str::snake($package) . ".assets.scripts');\n";
+    $routes .= "    Route::get('/".Str::snake($package)."/assets/styles', [\\".$namespace."\\Http\\Controllers\\AssetsController::class,'styles'])->name('".Str::snake($package).".assets.styles');\n";
+    $routes .= "    Route::get('/".Str::snake($package)."/assets/scripts', [\\".$namespace."\\Http\\Controllers\\AssetsController::class,'scripts'])->name('".Str::snake($package).".assets.scripts');\n";
     $routes .= "});\n";
 
     file_put_contents('routes/web.php', $routes);
@@ -287,8 +286,8 @@ function supportDirective(string $package, string $namespace): void
     $support = file_get_contents('stubs/support/directives.stub');
     $support = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $support);
     $support = Str::replace('LaravelPackageSkeleton', Str::studly($package), $support);
-    $support = Str::replace('package.', Str::snake($package) . '.', $support);
-    file_put_contents('src/Support/' . Str::studly($package) . 'Directives.php', $support);
+    $support = Str::replace('package.', Str::snake($package).'.', $support);
+    file_put_contents('src/Support/'.Str::studly($package).'Directives.php', $support);
 
     $support = file_get_contents('stubs/support/utils.stub');
     $support = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $support);
@@ -309,8 +308,8 @@ function providerDirective(string $package, string $namespace): void
     $provider = file_get_contents('stubs/providers/bladeDirectives.stub');
     $provider = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $provider);
     $provider = Str::replace('LaravelPackageSkeleton', Str::studly($package), $provider);
-    $provider = Str::replace('laravelPackageSkeletonStyles', Str::camel($package) . 'Styles', $provider);
-    $provider = Str::replace('laravelPackageSkeletonScripts', Str::camel($package) . 'Scripts', $provider);
+    $provider = Str::replace('laravelPackageSkeletonStyles', Str::camel($package).'Styles', $provider);
+    $provider = Str::replace('laravelPackageSkeletonScripts', Str::camel($package).'Scripts', $provider);
     file_put_contents('src/Providers/BladeDirectives.php', $provider);
 }
 
@@ -318,8 +317,8 @@ function controllerDirective(string $package, string $namespace): void
 {
     $controller = file_get_contents('stubs/http/controllers/assets.stub');
     $controller = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $controller);
-    $controller = Str::replace('LaravelPackageSkeletonDirectives', Str::studly($package) . 'Directives', $controller);
-    $controller = Str::replace('package.', Str::snake($package) . '.', $controller);
+    $controller = Str::replace('LaravelPackageSkeletonDirectives', Str::studly($package).'Directives', $controller);
+    $controller = Str::replace('package.', Str::snake($package).'.', $controller);
     file_put_contents('src/Http/Controllers/AssetsController.php', $controller);
 
     $controller = file_get_contents('stubs/http/controllers/controller.stub');
@@ -332,7 +331,7 @@ function facadesDirective(string $package, string $namespace): void
     $facades = file_get_contents('stubs/facades/directives.stub');
     $facades = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $facades);
     $facades = Str::replace('LaravelPackageSkeleton', Str::studly($package), $facades);
-    file_put_contents('src/Facades/' . Str::studly($package) . 'Directives.php', $facades);
+    file_put_contents('src/Facades/'.Str::studly($package).'Directives.php', $facades);
 }
 
 function removeSubDirStub(): void
@@ -440,7 +439,7 @@ function initGit(): void
         hint: 'This will run git init.',
     );
 
-    if (!file_exists('.gitignore')) {
+    if (! file_exists('.gitignore')) {
         copy('stubs/gitignore.stub', '.gitignore');
     }
 
