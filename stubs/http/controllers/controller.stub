@@ -1,0 +1,7 @@
+<?php
+
+namespace Danidoble\LaravelPackageSkeleton\Http\Controllers;
+
+abstract class Controller
+{
+}
