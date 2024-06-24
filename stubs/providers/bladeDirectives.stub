@@ -10,8 +10,7 @@ class BladeDirectives extends ExposerBladeDirectives
 {
     public static function register(): void
     {
-        Blade::directive('laravelPackageSkeletonStyles', static function (): string {
-            return LaravelPackageSkeletonDirectives::styles();
-        });
+        Blade::directive('laravelPackageSkeletonStyles', [LaravelPackageSkeletonDirectives::class, 'styles']);
+        Blade::directive('laravelPackageSkeletonScripts', [LaravelPackageSkeletonDirectives::class, 'scripts']);
     }
 }

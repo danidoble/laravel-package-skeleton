@@ -260,7 +260,7 @@ function configureTailwind(): void
     exec('npm update && npm run build');
 }
 
-function addComposerDependencyDirective()
+function addComposerDependencyDirective(): void
 {
     $composer = json_decode(file_get_contents('composer.json'), true);
     $composer['require']['danidoble/exposer'] = '^0.0.1';
@@ -274,7 +274,8 @@ function updateWebRoutesDirective(string $package, string $namespace): void
 
     $routes .= "\n\n";
     $routes .= "Route::middleware(['web'])->group(function () {\n";
-    $routes .= "    Route::get('/".Str::snake($package)."/assets/styles', [".$namespace."\\Http\\Controllers\\AssetsController::class,'styles'])->middleware(['auth'])->name('".Str::snake($package).".assets.styles');\n";
+    $routes .= "    Route::get('/".Str::snake($package)."/assets/styles', [\\".$namespace."\\Http\\Controllers\\AssetsController::class,'styles'])->name('".Str::snake($package).".assets.styles');\n";
+    $routes .= "    Route::get('/".Str::snake($package)."/assets/scripts', [\\".$namespace."\\Http\\Controllers\\AssetsController::class,'scripts'])->name('".Str::snake($package).".assets.scripts');\n";
     $routes .= "});\n";
 
     file_put_contents('routes/web.php', $routes);

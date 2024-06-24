@@ -13,7 +13,15 @@ class AssetsController extends ExposerController
     {
         $route = route('package.assets.styles');
         $version = (new BladeDirectives())->getManifestVersion('app', 'css', $route);
-        $path = realpath(__DIR__ . "/../../../dist/build/assets/activation$version.css");
+        $path = realpath(__DIR__ . "/../../../dist/build/assets/app$version.css");
         return Utils::pretendResponseIsFile($path, 'text/css');
     }
+
+    public function scripts(): BinaryFileResponse
+        {
+            $route = route('package.assets.scripts');
+            $version = (new BladeDirectives())->getManifestVersion('app', 'js', $route);
+            $path = realpath(__DIR__ . "/../../../dist/build/assets/app$version.js");
+            return Utils::pretendResponseIsFile($path, 'application/javascript');
+        }
 }

@@ -13,4 +13,16 @@ class LaravelPackageSkeletonDirectives extends BladeDirectives
 
         return "<link href=\"{$route}\" rel=\"stylesheet\" type=\"text/css\">";
     }
+
+    public function scripts(bool $absolute = true, array $attributes = []): string
+    {
+        $route = route('package.assets.styles', [], $absolute);
+        $this->getManifestVersion('app', 'css', $route);
+
+        $attributes = new ComponentAttributeBag($attributes);
+
+        return <<<HTML
+        <script src="{$route}" defer {$attributes->toHtml()}></script>
+        HTML;
+    }
 }
