@@ -17,6 +17,7 @@ final class LaravelPackageSkeletonServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        BladeDirectives::register();
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
     }
 }

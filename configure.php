@@ -69,6 +69,11 @@ function configure(): void
     $has_config = wantConfig();
     $has_migration = wantMigration();
     $has_web_routes = wantWebRoutes();
+    $with_assets = false;
+    if ($has_web_routes) {
+        $with_assets = exposeAssets();
+    }
+
     if ($has_config) {
         makeConfigFile($package);
     }
@@ -79,13 +84,12 @@ function configure(): void
     if ($has_web_routes) {
         makeWebRoutes($package);
 
-        $with_assets = exposeAssets();
         if ($with_assets) {
             makeAssets($company, $package, $namespace);
         }
     }
 
-    makeServiceProvider($package, $namespace, $has_config, $has_migration, $has_web_routes);
+    makeServiceProvider($package, $namespace, $has_config, $has_migration, $has_web_routes, $with_assets);
     setComposerName($company, $package, $namespace);
     initGit();
 
@@ -189,7 +193,8 @@ function makeServiceProvider(
     string $namespace,
     bool $has_config,
     bool $has_migration,
-    bool $has_web_routes
+    bool $has_web_routes,
+    bool $with_assets = false
 ): void {
     $provider = file_get_contents('stubs/provider.stub');
     $provider = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $provider);
@@ -218,6 +223,10 @@ function makeServiceProvider(
         $has_web_routes ? '$this->loadRoutesFrom(__DIR__.\'/../../routes/web.php\');' : '',
         $provider
     );
+
+    if (!$with_assets) {
+        $provider = Str::replace('BladeDirectives::register();', '', $provider);
+    }
 
     file_put_contents('src/Providers/'.Str::studly($package).'ServiceProvider.php', $provider);
 }
