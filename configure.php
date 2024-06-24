@@ -305,6 +305,7 @@ function providerDirective(string $package, string $namespace): void
     $provider = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $provider);
     $provider = Str::replace('LaravelPackageSkeleton', Str::studly($package), $provider);
     $provider = Str::replace('laravelPackageSkeletonStyles', Str::camel($package).'Styles', $provider);
+    $provider = Str::replace('laravelPackageSkeletonScripts', Str::camel($package).'Scripts', $provider);
     file_put_contents('src/Providers/BladeDirectives.php', $provider);
 }
 

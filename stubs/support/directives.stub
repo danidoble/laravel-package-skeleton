@@ -2,6 +2,7 @@
 
 namespace Danidoble\LaravelPackageSkeleton\Support;
 
+use Illuminate\View\ComponentAttributeBag;
 use Danidoble\Exposer\Support\BladeDirectives;
 
 class LaravelPackageSkeletonDirectives extends BladeDirectives
