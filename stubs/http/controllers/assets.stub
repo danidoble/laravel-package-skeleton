@@ -1,6 +1,6 @@
 <?php
 
-namespace Danidoble\LaravelPackageSkeleton\Http\Controller;
+namespace Danidoble\LaravelPackageSkeleton\Http\Controllers;
 
 use Danidoble\Exposer\Http\Controllers\AssetsController as ExposerController;
 use Danidoble\Exposer\Support\BladeDirectives;

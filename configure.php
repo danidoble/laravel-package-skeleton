@@ -241,6 +241,7 @@ function makeAssets(string $vendor, string $package, string $namespace): void
     cssAndJsDirective();
     supportDirective($package, $namespace);
     updateWebRoutesDirective($package, $namespace);
+    addComposerDependencyDirective();
     configureTailwind();
 }
 
@@ -257,6 +258,14 @@ function configureTailwind(): void
     file_put_contents('vite.config.js', $vite);
 
     exec('npm update && npm run build');
+}
+
+function addComposerDependencyDirective()
+{
+    $composer = json_decode(file_get_contents('composer.json'), true);
+    $composer['require']['danidoble/exposer'] = '^0.0.1';
+    file_put_contents('composer.json', json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
 }
 
 function updateWebRoutesDirective(string $package, string $namespace): void
