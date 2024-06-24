@@ -229,7 +229,9 @@ function makeAssets(string $vendor, string $package, string $namespace): void
     ];
 
     foreach ($directories as $directory) {
-        mkdir(__DIR__.DIRECTORY_SEPARATOR.$directory, 0777, true);
+        if ( ! \Illuminate\Support\Facades\File::exists(__DIR__.DIRECTORY_SEPARATOR.$directory) ) {
+            mkdir(__DIR__ . DIRECTORY_SEPARATOR . $directory, 0777, true);
+        }
     }
 
     facadesDirective($package, $namespace);

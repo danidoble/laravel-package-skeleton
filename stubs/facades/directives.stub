@@ -3,7 +3,7 @@
 namespace Danidoble\LaravelPackageSkeleton\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Danidoble\LaravelPackageSkeleton\Facades\Support\LaravelPackageSkeletonDirectives as BladeDirectives;
+use Danidoble\LaravelPackageSkeleton\Support\LaravelPackageSkeletonDirectives as BladeDirectives;
 
 /**
  * @method static string styles(bool $absolute = true)
