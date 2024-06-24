@@ -3,16 +3,43 @@
 namespace Danidoble\LaravelPackageSkeleton\Support;
 
 use Illuminate\View\ComponentAttributeBag;
-use Danidoble\Exposer\Support\BladeDirectives;
 
-class LaravelPackageSkeletonDirectives extends BladeDirectives
+class LaravelPackageSkeletonDirectives
 {
+
+    public function getManifestVersion(string $file, string $extension, ?string &$route = null, ?string $path = null, ?string $assets = null): ?string
+    {
+        $manifestPath = dirname(__DIR__, 2) . '/dist/build/manifest.json';
+
+        if (!file_exists($manifestPath)) {
+            return null;
+        }
+
+        $manifest = json_decode(file_get_contents($manifestPath), true);
+
+        if (!$path) {
+            $path = "resources/$extension/";
+        }
+        if (!$assets) {
+            $assets = 'assets/';
+        }
+
+        $_file = $manifest[$path . $file . '.' . $extension]['file'];
+
+        $version = str_replace($assets . $file, '', $_file);
+        $version = str_replace('.' . $extension, '', $version);
+
+        $route = $route ? "{$route}?id={$version}" : $route;
+
+        return $version;
+    }
+
     public function styles(bool $absolute = true): string
     {
         $route = route('package.assets.styles', [], $absolute);
         $version = $this->getManifestVersion(__DIR__, 'app', 'css', $route);
 
-        return "<link href=\"{$route}?id={$version}\" rel=\"stylesheet\" type=\"text/css\">";
+        return "<link href=\"{$route}\" rel=\"stylesheet\" type=\"text/css\">";
     }
 
     public function scripts(bool $absolute = true, array $attributes = []): string
@@ -23,7 +50,7 @@ class LaravelPackageSkeletonDirectives extends BladeDirectives
         $attributes = new ComponentAttributeBag($attributes);
 
         return <<<HTML
-        <script src="{$route}?id={$version}" defer {$attributes->toHtml()}></script>
+        <script src="{$route}" defer {$attributes->toHtml()}></script>
         HTML;
     }
 }

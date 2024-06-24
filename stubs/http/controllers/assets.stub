@@ -2,12 +2,11 @@
 
 namespace Danidoble\LaravelPackageSkeleton\Http\Controllers;
 
-use Danidoble\Exposer\Http\Controllers\AssetsController as ExposerController;
-use Danidoble\Exposer\Support\BladeDirectives;
-use Danidoble\Exposer\Support\Utils;
+use Danidoble\LaravelPackageSkeleton\Support\BladeDirectives;
+use Danidoble\LaravelPackageSkeleton\Support\Utils;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class AssetsController extends ExposerController
+class AssetsController extends Controller
 {
     public function styles(): BinaryFileResponse
     {
@@ -18,10 +17,10 @@ class AssetsController extends ExposerController
     }
 
     public function scripts(): BinaryFileResponse
-        {
-            $route = route('package.assets.scripts');
-            $version = (new BladeDirectives())->getManifestVersion(__DIR__, 'app', 'js', $route);
-            $path = realpath(__DIR__ . "/../../../dist/build/assets/app$version.js");
-            return Utils::pretendResponseIsFile($path, 'application/javascript');
-        }
+    {
+        $route = route('package.assets.scripts');
+        $version = (new BladeDirectives())->getManifestVersion(__DIR__, 'app', 'js', $route);
+        $path = realpath(__DIR__ . "/../../../dist/build/assets/app$version.js");
+        return Utils::pretendResponseIsFile($path, 'application/javascript');
+    }
 }
