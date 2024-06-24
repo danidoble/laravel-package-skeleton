@@ -37,7 +37,7 @@ class LaravelPackageSkeletonDirectives
     public function styles(bool $absolute = true): string
     {
         $route = route('package.assets.styles', [], $absolute);
-        $version = $this->getManifestVersion(__DIR__, 'app', 'css', $route);
+        $this->getManifestVersion('app', 'css', $route);
 
         return "<link href=\"{$route}\" rel=\"stylesheet\" type=\"text/css\">";
     }
@@ -45,7 +45,7 @@ class LaravelPackageSkeletonDirectives
     public function scripts(bool $absolute = true, array $attributes = []): string
     {
         $route = route('package.assets.scripts', [], $absolute);
-        $version = $this->getManifestVersion(__DIR__, 'app', 'js', $route);
+        $this->getManifestVersion('app', 'js', $route);
 
         $attributes = new ComponentAttributeBag($attributes);
 
