@@ -318,7 +318,7 @@ function controllerDirective(string $package, string $namespace): void
 {
     $controller = file_get_contents('stubs/http/controllers/assets.stub');
     $controller = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $controller);
-    $controller = Str::replace('LaravelPackageSkeletonDirectives', $package . 'Directives', $controller);
+    $controller = Str::replace('LaravelPackageSkeletonDirectives', Str::studly($package) . 'Directives', $controller);
     $controller = Str::replace('package.', Str::snake($package) . '.', $controller);
     file_put_contents('src/Http/Controllers/AssetsController.php', $controller);
 
