@@ -325,21 +325,39 @@ function facadesDirective(string $package, string $namespace): void
     file_put_contents('src/Facades/'.Str::studly($package).'Directives.php', $facades);
 }
 
-function removeStubDir(?string $subDir = null): void
-{
+function removeSubDirStub():void{
+    $directories  = [
+        'stubs/facades/*',
+        'stubs/http/controllers/*',
+        'stubs/http/*',
+        'stubs/providers/*',
+        'stubs/resources/css/*',
+        'stubs/resources/js/*',
+        'stubs/resources/*',
+        'stubs/support/*',
+        'stubs/tailwindcss/*',
+    ];
 
-    if (! $subDir) {
-        $files = glob('stubs/*');
-    } else {
-        $files = glob('stubs/'.$subDir.'/*');
+    foreach ($directories as $directory) {
+        $files = glob($directory);
+        foreach ($files as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+        unlink(str_replace('*', '', $directory));
     }
+}
+
+function removeStubDir(): void
+{
+    removeSubDirStub();
+
+    $files = glob('stubs/*');
 
     foreach ($files as $file) {
         if (is_file($file)) {
             unlink($file);
-        } elseif (is_dir($file)) {
-            removeStubDir(basename($file));
-            rmdir('stubs/'.$subDir);
         }
     }
     rmdir('stubs');
