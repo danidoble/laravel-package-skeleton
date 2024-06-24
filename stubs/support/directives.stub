@@ -10,20 +10,20 @@ class LaravelPackageSkeletonDirectives extends BladeDirectives
     public function styles(bool $absolute = true): string
     {
         $route = route('package.assets.styles', [], $absolute);
-        $this->getManifestVersion(__DIR__, 'app', 'css', $route);
+        $version = $this->getManifestVersion(__DIR__, 'app', 'css', $route);
 
-        return "<link href=\"{$route}\" rel=\"stylesheet\" type=\"text/css\">";
+        return "<link href=\"{$route}?id={$version}\" rel=\"stylesheet\" type=\"text/css\">";
     }
 
     public function scripts(bool $absolute = true, array $attributes = []): string
     {
         $route = route('package.assets.scripts', [], $absolute);
-        $this->getManifestVersion(__DIR__, 'app', 'js', $route);
+        $version = $this->getManifestVersion(__DIR__, 'app', 'js', $route);
 
         $attributes = new ComponentAttributeBag($attributes);
 
         return <<<HTML
-        <script src="{$route}" defer {$attributes->toHtml()}></script>
+        <script src="{$route}?id={$version}" defer {$attributes->toHtml()}></script>
         HTML;
     }
 }
