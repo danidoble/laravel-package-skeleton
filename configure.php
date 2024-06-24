@@ -325,8 +325,9 @@ function facadesDirective(string $package, string $namespace): void
     file_put_contents('src/Facades/'.Str::studly($package).'Directives.php', $facades);
 }
 
-function removeSubDirStub():void{
-    $directories  = [
+function removeSubDirStub(): void
+{
+    $directories = [
         'stubs/facades/*',
         'stubs/http/controllers/*',
         'stubs/http/*',
@@ -345,7 +346,10 @@ function removeSubDirStub():void{
                 unlink($file);
             }
         }
-        unlink(str_replace('*', '', $directory));
+
+        if ($dir = str_replace('*', '', $directory)) {
+            rmdir($dir);
+        }
     }
 }
 
