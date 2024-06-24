@@ -257,7 +257,7 @@ function configureTailwind(): void
     file_put_contents('tailwind.config.js', $tailwind);
     file_put_contents('vite.config.js', $vite);
 
-    exec('npm update && npm run build');
+    exec('npm install && npm run build');
 }
 
 function addComposerDependencyDirective(): void
@@ -331,9 +331,22 @@ function removeStubDir(): void
     foreach ($files as $file) {
         if (is_file($file)) {
             unlink($file);
+        } elseif (is_dir($file)) {
+            removeSubDirStubDir(basename($file));
         }
     }
     rmdir('stubs');
+}
+
+function removeSubDirStubDir(string $subDir): void
+{
+    $files = glob('stubs/'.$subDir.'/*');
+    foreach ($files as $file) {
+        if (is_file($file)) {
+            unlink($file);
+        }
+    }
+    rmdir('stubs/'.$subDir);
 }
 
 function getCompany(): string
