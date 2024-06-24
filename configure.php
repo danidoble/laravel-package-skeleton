@@ -325,30 +325,24 @@ function facadesDirective(string $package, string $namespace): void
     file_put_contents('src/Facades/'.Str::studly($package).'Directives.php', $facades);
 }
 
-function removeStubDir(): void
+function removeStubDir(?string $subDir = null): void
 {
-    $files = glob('stubs/*');
+
+    if (! $subDir) {
+        $files = glob('stubs/*');
+    } else {
+        $files = glob('stubs/'.$subDir.'/*');
+    }
+
     foreach ($files as $file) {
         if (is_file($file)) {
             unlink($file);
         } elseif (is_dir($file)) {
-            removeSubDirStubDir(basename($file));
+            removeStubDir(basename($file));
+            rmdir('stubs/'.$subDir);
         }
     }
     rmdir('stubs');
-}
-
-function removeSubDirStubDir(string $subDir): void
-{
-    $files = glob('stubs/'.$subDir.'/*');
-    foreach ($files as $file) {
-        if (is_dir($file)) {
-            removeSubDirStubDir(basename($file));
-        } elseif (is_file($file)) {
-            unlink($file);
-        }
-    }
-    rmdir('stubs/'.$subDir);
 }
 
 function getCompany(): string
