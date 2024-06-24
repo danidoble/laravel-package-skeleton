@@ -229,8 +229,9 @@ function makeAssets(string $vendor, string $package, string $namespace): void
     ];
 
     foreach ($directories as $directory) {
-        if ( ! \Illuminate\Support\Facades\File::exists(__DIR__.DIRECTORY_SEPARATOR.$directory) ) {
-            mkdir(__DIR__ . DIRECTORY_SEPARATOR . $directory, 0777, true);
+        $path = __DIR__.DIRECTORY_SEPARATOR.$directory;
+        if (! file_exists($path) && ! is_dir($path)) {
+            mkdir($path, 0777, true);
         }
     }
 
