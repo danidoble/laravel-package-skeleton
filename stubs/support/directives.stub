@@ -1,0 +1,16 @@
+<?php
+
+namespace Danidoble\LaravelPackageSkeleton\Support;
+
+use Danidoble\Exposer\Support\BladeDirectives;
+
+class LaravelPackageSkeletonDirectives extends BladeDirectives
+{
+    public function styles(bool $absolute = true): string
+    {
+        $route = route('package.assets.styles', [], $absolute);
+        $this->getManifestVersion('app', 'css', $route);
+
+        return "<link href=\"{$route}\" rel=\"stylesheet\" type=\"text/css\">";
+    }
+}

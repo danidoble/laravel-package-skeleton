@@ -1,14 +1,14 @@
 <?php
 
 use Illuminate\Support\Str;
-use Laravel\Prompts\Prompt;
-use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\text;
-
-use Laravel\Prompts\TextPrompt;
 use Laravel\Prompts\ConfirmPrompt;
+use Laravel\Prompts\Prompt;
+use Laravel\Prompts\TextPrompt;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
+
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\text;
 
 require __DIR__.'/vendor/autoload.php';
 
@@ -78,6 +78,11 @@ function configure(): void
     }
     if ($has_web_routes) {
         makeWebRoutes($package);
+
+        $with_assets = exposeAssets();
+        if ($with_assets) {
+            makeAssets($company, $package, $namespace);
+        }
     }
 
     makeServiceProvider($package, $namespace, $has_config, $has_migration, $has_web_routes);
@@ -130,6 +135,7 @@ function getTableName(string $package): string
 {
     return Str::snake($package);
 }
+
 function getTableMigrationName(string $package): string
 {
     return now()->format('Y_m_d_His').'_create_'.Str::snake($package).'_table';
@@ -216,6 +222,95 @@ function makeServiceProvider(
     file_put_contents('src/Providers/'.Str::studly($package).'ServiceProvider.php', $provider);
 }
 
+function makeAssets(string $vendor, string $package, string $namespace): void
+{
+    $directories = [
+        'resources/css', 'resources/js', 'src/Facades', 'src/Http/Controllers', 'src/Providers', 'src/Support',
+    ];
+
+    foreach ($directories as $directory) {
+        mkdir(__DIR__.DIRECTORY_SEPARATOR.$directory, 0777, true);
+    }
+
+    facadesDirective($package, $namespace);
+    controllerDirective($package, $namespace);
+    providerDirective($package, $namespace);
+    cssAndJsDirective();
+    supportDirective($package, $namespace);
+    updateWebRoutesDirective($package, $namespace);
+    configureTailwind();
+}
+
+function configureTailwind(): void
+{
+    $package = file_get_contents('stubs/tailwindcss/package.json.stub');
+    $postcss = file_get_contents('stubs/tailwindcss/postcss.config.js.stub');
+    $tailwind = file_get_contents('stubs/tailwindcss/tailwind.config.js.stub');
+    $vite = file_get_contents('stubs/tailwindcss/vite.config.js.stub');
+
+    file_put_contents('package.json', $package);
+    file_put_contents('postcss.config.js', $postcss);
+    file_put_contents('tailwind.config.js', $tailwind);
+    file_put_contents('vite.config.js', $vite);
+
+    exec('npm update && npm run build');
+}
+
+function updateWebRoutesDirective(string $package, string $namespace): void
+{
+    $routes = file_get_contents('routes/web.php');
+
+    $routes .= "\n\n";
+    $routes .= "Route::middleware(['web'])->group(function () {\n";
+    $routes .= "    Route::get('/".Str::snake($package)."/assets/styles', [".$namespace."\\Http\\Controllers\\AssetsController::class,'styles'])->middleware(['auth'])->name('".Str::snake($package).".assets.styles');\n";
+    $routes .= "});\n";
+
+    file_put_contents('routes/web.php', $routes);
+}
+
+function supportDirective(string $package, string $namespace): void
+{
+    $support = file_get_contents('stubs/support/directives.stub');
+    $support = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $support);
+    $support = Str::replace('LaravelPackageSkeleton', Str::studly($package), $support);
+    $support = Str::replace('package.', Str::snake($package).'.', $support);
+    file_put_contents('src/Support/'.Str::studly($package).'Directives.php', $support);
+}
+
+function cssAndJsDirective(): void
+{
+    $css = file_get_contents('stubs/resources/css/app.css.stub');
+    $js = file_get_contents('stubs/resources/js/app.js.stub');
+
+    file_put_contents('resources/css/app.css', $css);
+    file_put_contents('resources/js/app.js', $js);
+}
+
+function providerDirective(string $package, string $namespace): void
+{
+    $provider = file_get_contents('stubs/providers/bladeDirectives.stub');
+    $provider = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $provider);
+    $provider = Str::replace('LaravelPackageSkeleton', Str::studly($package), $provider);
+    $provider = Str::replace('laravelPackageSkeletonStyles', Str::camel($package).'Styles', $provider);
+    file_put_contents('src/Providers/BladeDirectives.php', $provider);
+}
+
+function controllerDirective(string $package, string $namespace): void
+{
+    $controller = file_get_contents('stubs/http/controllers/assets.stub');
+    $controller = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $controller);
+    $controller = Str::replace('package.', Str::snake($package).'.', $controller);
+    file_put_contents('src/Http/Controllers/AssetsController.php', $controller);
+}
+
+function facadesDirective(string $package, string $namespace): void
+{
+    $facades = file_get_contents('stubs/facades/directives.stub');
+    $facades = Str::replace('Danidoble\LaravelPackageSkeleton', $namespace, $facades);
+    $facades = Str::replace('LaravelPackageSkeleton', Str::studly($package), $facades);
+    file_put_contents('src/Facades/'.Str::studly($package).'Directives.php', $facades);
+}
+
 function removeStubDir(): void
 {
     $files = glob('stubs/*');
@@ -230,9 +325,9 @@ function removeStubDir(): void
 function getCompany(): string
 {
     return text(
-        label: 'What is your company?',
+        label: 'What is your company (vendor)?',
         placeholder: 'E.g. Acme',
-        required: 'Company is required.',
+        required: 'Company (vendor) is required.',
         hint: 'This will be used to namespace the package.',
     );
 }
@@ -297,6 +392,17 @@ function initGit(): void
     if ($initialize) {
         exec('git init');
     }
+}
+
+function exposeAssets(): bool
+{
+    return confirm(
+        label: 'Do you want to expose assets with url? (This will expose 2 routes (by default), E.g. /assets/css and /assets/js.)',
+        default: true,
+        yes: 'Yes',
+        no: 'No',
+        hint: 'So you can use them in your views with blade directive like @packageStyles and @packageScripts.',
+    );
 }
 
 configure();

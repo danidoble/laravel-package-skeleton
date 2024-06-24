@@ -1,0 +1,19 @@
+<?php
+
+namespace Danidoble\LaravelPackageSkeleton\Http\Controller;
+
+use Danidoble\Exposer\Http\Controllers\AssetsController as ExposerController;
+use Danidoble\Exposer\Support\BladeDirectives;
+use Danidoble\Exposer\Support\Utils;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
+class AssetsController extends ExposerController
+{
+    public function styles(): BinaryFileResponse
+    {
+        $route = route('package.assets.styles');
+        $version = (new BladeDirectives())->getManifestVersion('app', 'css', $route);
+        $path = realpath(__DIR__ . "/../../../dist/build/assets/activation$version.css");
+        return Utils::pretendResponseIsFile($path, 'text/css');
+    }
+}

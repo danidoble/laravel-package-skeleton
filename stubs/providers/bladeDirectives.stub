@@ -1,0 +1,17 @@
+<?php
+
+namespace Danidoble\LaravelPackageSkeleton\Providers;
+
+use Danidoble\LaravelPackageSkeleton\Facades\LaravelPackageSkeletonDirectives;
+use Danidoble\Exposer\Providers\BladeDirectives as ExposerBladeDirectives;
+use Illuminate\Support\Facades\Blade;
+
+class BladeDirectives extends ExposerBladeDirectives
+{
+    public static function register(): void
+    {
+        Blade::directive('laravelPackageSkeletonStyles', static function (): string {
+            return LaravelPackageSkeletonDirectives::styles();
+        });
+    }
+}
